@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ian Lucas — portfolioHUB</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --accent3: #f59e0b;
+    --text: #f0f0f8;
+    --muted: #8888aa;
+    --border: rgba(124,58,237,0.25);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent2);
+    letter-spacing: 0.1em;
+    text-decoration: none;
+  }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent2); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent2);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--accent2);
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero h1 .name-last {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--accent);
+  }
+
+  .hero-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--accent3);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-bio {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+  }
+
+  .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    background: var(--accent);
+    color: white;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { background: #6d28d9; transform: translateY(-2px); }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    border: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  /* HERO RIGHT — stats */
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1.5rem;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+
+  .stat-num {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent2);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .contact-pills {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+  }
+  .pill:hover { border-color: var(--accent2); color: var(--accent2); }
+  .pill-icon { color: var(--accent); font-size: 1rem; }
+
+  /* SECTIONS */
+  section { padding: 6rem 4rem; }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); max-width: 60px; }
+
+  .section-title {
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 3rem;
+    line-height: 1.1;
+  }
+
+  /* ABOUT / ESCOLARIDADE */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .edu-list { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .edu-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.2s;
+  }
+  .edu-item:hover { border-color: var(--accent); }
+
+  .edu-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-top: 0.4rem;
+    flex-shrink: 0;
+  }
+  .edu-dot.done { background: var(--accent2); }
+  .edu-dot.current { background: var(--accent3); animation: pulse 2s infinite; }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(245,158,11,0); }
+  }
+
+  .edu-school { font-size: 0.75rem; font-family: 'Space Mono', monospace; color: var(--muted); margin-top: 0.2rem; }
+  .edu-title { font-weight: 700; font-size: 0.95rem; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-top: 0.4rem;
+  }
+  .badge-done { background: rgba(6,182,212,0.15); color: var(--accent2); border: 1px solid rgba(6,182,212,0.3); }
+  .badge-current { background: rgba(245,158,11,0.15); color: var(--accent3); border: 1px solid rgba(245,158,11,0.3); }
+
+  /* IDIOMAS */
+  .lang-grid { display: flex; flex-direction: column; gap: 1rem; }
+  .lang-item { display: flex; flex-direction: column; gap: 0.4rem; }
+  .lang-header { display: flex; justify-content: space-between; align-items: center; }
+  .lang-name { font-weight: 700; font-size: 0.9rem; }
+  .lang-level { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--muted); }
+  .lang-bar { height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+  .lang-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 1s ease; }
+
+  /* PROJETOS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .project-card:hover::before { transform: scaleX(1); }
+  .project-card:hover { border-color: rgba(124,58,237,0.5); transform: translateY(-4px); }
+
+  .project-type {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .project-title { font-size: 1.15rem; font-weight: 700; }
+  .project-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.7; flex: 1; }
+
+  .tech-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .tech-tag {
+    padding: 0.2rem 0.6rem;
+    background: rgba(124,58,237,0.12);
+    border: 1px solid rgba(124,58,237,0.25);
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--accent2);
+  }
+
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+  .project-link:hover { color: var(--accent2); }
+
+  /* HABILIDADES */
+  .skills-section { background: var(--surface); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .skill-group {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+  }
+
+  .skill-group-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent3);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .skill-items { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .skill-item {
+    padding: 0.3rem 0.7rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .skill-item:hover { color: var(--text); border-color: var(--accent2); }
+
+  /* CONQUISTAS */
+  .achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .achievement-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+  .achievement-card:hover { border-color: var(--accent3); }
+
+  .achievement-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .achievement-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+  .achievement-desc { color: var(--muted); font-size: 0.82rem; line-height: 1.6; }
+
+  /* RECOMENDAÇÕES */
+  .recs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .rec-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.75rem;
+    position: relative;
+  }
+
+  .rec-quote {
+    font-size: 3rem;
+    color: var(--accent);
+    opacity: 0.3;
+    line-height: 1;
+    font-family: Georgia, serif;
+    margin-bottom: 0.5rem;
+  }
+
+  .rec-text {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+    font-style: italic;
+  }
+
+  .rec-author { display: flex; align-items: center; gap: 0.75rem; }
+  .rec-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .rec-name { font-weight: 700; font-size: 0.88rem; }
+  .rec-role { font-family: 'Space Mono', monospace; font-size: 0.68rem; color: var(--muted); }
+
+  /* FOOTER */
+  footer {
+    padding: 3rem 4rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--accent2); }
+
+  /* SCROLL ANIMATIONS */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; }
+    .hero-right { align-items: flex-start; }
+    .stat-grid { max-width: 100%; }
+    .contact-pills { max-width: 100%; }
+    section { padding: 4rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; }
+    footer { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">IAN.LUCAS / portfolioHUB</a>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#projetos">Projetos</a></li>
+    <li><a href="#habilidades">Skills</a></li>
+    <li><a href="#conquistas">Conquistas</a></li>
+    <li><a href="#recomendacoes">Rec.</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-left">
+    <div class="hero-tag">Desenvolvedor Full-Stack & Engenheiro da Computação</div>
+    <h1>IAN <br><span class="name-last">LUCAS</span></h1>
+    <div class="hero-sub">// da Costa Mourão · Brasília, DF</div>
+    <p class="hero-bio">
+      Autodidata desde os 12 anos, construo soluções que cruzam engenharia de dados, 
+      desenvolvimento web e automação. Competidor em olimpíadas nacionais, 
+      finalista em torneios de robótica e apaixonado por criar jogos nas horas vagas.
+    </p>
+    <div class="hero-ctas">
+      <a href="https://github.com/dogeil" target="_blank" class="btn-primary">GitHub ↗</a>
+      <a href="https://linkedin.com/in/ian-mourao" target="_blank" class="btn-outline">LinkedIn ↗</a>
+      <a href="mailto:ian.lucas.dev@gmail.com" class="btn-outline">E-mail ↗</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-num">6+</div>
+        <div class="stat-label">anos codando</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">15</div>
+        <div class="stat-label">repositórios</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">3</div>
+        <div class="stat-label">idiomas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">100</div>
+        <div class="stat-label">TOEIC score</div>
+      </div>
+    </div>
+
+    <div class="contact-pills">
+      <a href="mailto:ian.lucas.dev@gmail.com" class="pill">
+        <span class="pill-icon">✉</span> ian.lucas.dev@gmail.com
+      </a>
+      <a href="tel:+5561995102886" class="pill">
+        <span class="pill-icon">◎</span> (61) 99510-2886
+      </a>
+      <a href="https://linkedin.com/in/ian-mourao" target="_blank" class="pill">
+        <span class="pill-icon">in</span> linkedin.com/in/ian-mourao
+      </a>
+      <a href="https://github.com/dogeil" target="_blank" class="pill">
+        <span class="pill-icon">⌥</span> github.com/dogeil
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE / ESCOLARIDADE -->
+<section id="sobre">
+  <div class="section-label">01 — Sobre</div>
+  <h2 class="section-title">Formação & Idiomas</h2>
+
+  <div class="about-grid">
+    <div class="fade-in">
+      <div class="section-label" style="margin-bottom: 1.25rem;">Escolaridade</div>
+      <div class="edu-list">
+        <div class="edu-item">
+          <div class="edu-dot done"></div>
+          <div>
+            <div class="edu-title">Ensino Médio</div>
+            <div class="edu-school">Sesi Sobradinho · 2022–2024</div>
+            <span class="badge badge-done">Formado</span>
+          </div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-dot done"></div>
+          <div>
+            <div class="edu-title">Técnico em Informática</div>
+            <div class="edu-school">Senai Sobradinho</div>
+            <span class="badge badge-done">Formado</span>
+          </div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-dot current"></div>
+          <div>
+            <div class="edu-title">Engenharia da Computação</div>
+            <div class="edu-school">CEUB · Brasília</div>
+            <span class="badge badge-current">Em andamento</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-in">
+      <div class="section-label" style="margin-bottom: 1.25rem;">Idiomas</div>
+      <div class="lang-grid">
+        <div class="lang-item">
+          <div class="lang-header">
+            <span class="lang-name">Inglês</span>
+            <span class="lang-level">Fluente · TOEIC 100/100</span>
+          </div>
+          <div class="lang-bar"><div class="lang-fill" style="width: 100%"></div></div>
+        </div>
+        <div class="lang-item">
+          <div class="lang-header">
+            <span class="lang-name">Português</span>
+            <span class="lang-level">Nativo</span>
+          </div>
+          <div class="lang-bar"><div class="lang-fill" style="width: 100%"></div></div>
+        </div>
+        <div class="lang-item">
+          <div class="lang-header">
+            <span class="lang-name">Espanhol</span>
+            <span class="lang-level">Intermediário</span>
+          </div>
+          <div class="lang-bar"><div class="lang-fill" style="width: 55%"></div></div>
+        </div>
+        <div class="lang-item">
+          <div class="lang-header">
+            <span class="lang-name">Japonês</span>
+            <span class="lang-level">Iniciante</span>
+          </div>
+          <div class="lang-bar"><div class="lang-fill" style="width: 15%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJETOS -->
+<section id="projetos">
+  <div class="section-label">02 — Projetos</div>
+  <h2 class="section-title">Trabalhos selecionados</h2>
+
+  <div class="projects-grid">
+    <div class="project-card fade-in">
+      <div class="project-type">Web · Marketing</div>
+      <div class="project-title">Axis Website</div>
+      <div class="project-desc">
+        Landing page para a equipe Axis, finalista nacional no torneio F1 in Schools (STEM Racing). 
+        Utilizada como suporte de marketing durante a competição.
+      </div>
+      <div class="tech-tags">
+        <span class="tech-tag">HTML5</span>
+        <span class="tech-tag">CSS3</span>
+        <span class="tech-tag">JavaScript</span>
+        <span class="tech-tag">Figma</span>
+        <span class="tech-tag">Photoshop</span>
+      </div>
+      <a href="https://github.com/dogeil/axis-site" target="_blank" class="project-link">Ver no GitHub →</a>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-type">Automação · API</div>
+      <div class="project-title">Formatador de Logbook</div>
+      <div class="project-desc">
+        Script usando a API do Google Sheets (App Scripts) para gerar, organizar e formatar 
+        dados de logbooks para pilotos civis, exportando em PDF.
+      </div>
+      <div class="tech-tags">
+        <span class="tech-tag">Google Sheets API</span>
+        <span class="tech-tag">JavaScript</span>
+        <span class="tech-tag">App Scripts</span>
+      </div>
+      <a href="https://github.com/dogeil/aviation-logbook-formatter" target="_blank" class="project-link">Ver no GitHub →</a>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-type">Algoritmo · Matemática</div>
+      <div class="project-title">Tabela Prates dos Restos</div>
+      <div class="project-desc">
+        Implementação eficiente para encontrar números primos seguindo o princípio da 
+        Tabela Prates dos Restos, comparada com o Crivo de Eratóstenes.
+      </div>
+      <div class="tech-tags">
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">Matplotlib</span>
+        <span class="tech-tag">NumPy</span>
+      </div>
+      <a href="https://github.com/dogeil" target="_blank" class="project-link">Ver no GitHub →</a>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-type">Web · E-commerce</div>
+      <div class="project-title">Caterinho</div>
+      <div class="project-desc">
+        Site para restaurante italiano com rastreamento de usuários via Meta Pixel e 
+        Google Tag Manager, coleta de cookies e integração de anúncios.
+      </div>
+      <div class="tech-tags">
+        <span class="tech-tag">HTML5</span>
+        <span class="tech-tag">Bootstrap</span>
+        <span class="tech-tag">Meta Pixel</span>
+        <span class="tech-tag">GTM</span>
+      </div>
+      <a href="https://github.com/dogeil" target="_blank" class="project-link">Ver no GitHub →</a>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-type">IA · Automação Pessoal</div>
+      <div class="project-title">Jarvis</div>
+      <div class="project-desc">
+        Agente de IA pessoal e código de automação para uso no dia a dia, 
+        inspirado no Jarvis do Homem de Ferro.
+      </div>
+      <div class="tech-tags">
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">IA</span>
+        <span class="tech-tag">Automação</span>
+      </div>
+      <a href="https://github.com/dogeil/jarvis" target="_blank" class="project-link">Ver no GitHub →</a>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-type">Game Dev · C</div>
+      <div class="project-title">Terminal Tic-Tac-Toe</div>
+      <div class="project-desc">
+        Jogo da velha no terminal com interface simples e bot randomizado, 
+        desenvolvido em C para exploração de lógica de jogo.
+      </div>
+      <div class="tech-tags">
+        <span class="tech-tag">C</span>
+        <span class="tech-tag">Terminal UI</span>
+      </div>
+      <a href="https://github.com/dogeil/terminal-tic-tac-toe" target="_blank" class="project-link">Ver no GitHub →</a>
+    </div>
+  </div>
+</section>
+
+<!-- HABILIDADES -->
+<section id="habilidades" class="skills-section">
+  <div class="section-label">03 — Habilidades</div>
+  <h2 class="section-title">Stack técnica</h2>
+
+  <div class="skills-grid">
+    <div class="skill-group fade-in">
+      <div class="skill-group-title">⌨ Linguagens</div>
+      <div class="skill-items">
+        <span class="skill-item">HTML</span>
+        <span class="skill-item">CSS</span>
+        <span class="skill-item">JavaScript</span>
+        <span class="skill-item">Python</span>
+        <span class="skill-item">C</span>
+        <span class="skill-item">C++</span>
+        <span class="skill-item">C#</span>
+        <span class="skill-item">Arduino</span>
+      </div>
+    </div>
+
+    <div class="skill-group fade-in">
+      <div class="skill-group-title">⚙ Frameworks & libs</div>
+      <div class="skill-items">
+        <span class="skill-item">React</span>
+        <span class="skill-item">Node.js</span>
+        <span class="skill-item">Django</span>
+        <span class="skill-item">Flask</span>
+        <span class="skill-item">Bootstrap</span>
+        <span class="skill-item">Matplotlib</span>
+        <span class="skill-item">NumPy</span>
+      </div>
+    </div>
+
+    <div class="skill-group fade-in">
+      <div class="skill-group-title">☁ Cloud & Dados</div>
+      <div class="skill-items">
+        <span class="skill-item">MySQL</span>
+        <span class="skill-item">NoSQL</span>
+        <span class="skill-item">MongoDB</span>
+        <span class="skill-item">AWS</span>
+        <span class="skill-item">Power BI</span>
+        <span class="skill-item">Git</span>
+      </div>
+    </div>
+
+    <div class="skill-group fade-in">
+      <div class="skill-group-title">🎨 Design & 3D</div>
+      <div class="skill-items">
+        <span class="skill-item">Figma</span>
+        <span class="skill-item">Photoshop</span>
+        <span class="skill-item">Fusion 360</span>
+        <span class="skill-item">Blender</span>
+        <span class="skill-item">GIMP</span>
+        <span class="skill-item">Audacity</span>
+      </div>
+    </div>
+
+    <div class="skill-group fade-in">
+      <div class="skill-group-title">🎮 Game Dev</div>
+      <div class="skill-items">
+        <span class="skill-item">Unity</span>
+        <span class="skill-item">C# (Unity)</span>
+        <span class="skill-item">Game Logic</span>
+      </div>
+    </div>
+
+    <div class="skill-group fade-in">
+      <div class="skill-group-title">📋 Organização</div>
+      <div class="skill-items">
+        <span class="skill-item">MS Office</span>
+        <span class="skill-item">Google Workspace</span>
+        <span class="skill-item">GitHub</span>
+        <span class="skill-item">Agile</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONQUISTAS -->
+<section id="conquistas">
+  <div class="section-label">04 — Conquistas</div>
+  <h2 class="section-title">Competições & Prêmios</h2>
+
+  <div class="achievements-grid">
+    <div class="achievement-card fade-in">
+      <div class="achievement-icon">🏆</div>
+      <div>
+        <div class="achievement-title">FLL — 1º Lugar Regional</div>
+        <div class="achievement-desc">First Lego League — 1º lugar no desafio de robô na etapa regional.</div>
+      </div>
+    </div>
+    <div class="achievement-card fade-in">
+      <div class="achievement-icon">🏎</div>
+      <div>
+        <div class="achievement-title">F1 in Schools — Finalista Nacional</div>
+        <div class="achievement-desc">9º carro mais rápido na etapa nacional. Prêmio de Reconhecimento de Conquista do Comitê dos Juízes.</div>
+      </div>
+    </div>
+    <div class="achievement-card fade-in">
+      <div class="achievement-icon">📱</div>
+      <div>
+        <div class="achievement-title">OBT — 2ª Etapa Nacional</div>
+        <div class="achievement-desc">Aprovado na 2ª etapa da Olimpíada Brasileira de Tecnologia com protótipo de aplicativo mobile.</div>
+      </div>
+    </div>
+    <div class="achievement-card fade-in">
+      <div class="achievement-icon">🌐</div>
+      <div>
+        <div class="achievement-title">TOEIC 100/100</div>
+        <div class="achievement-desc">Certificação de fluência em inglês com pontuação máxima no exame TOEIC.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECOMENDAÇÕES -->
+<section id="recomendacoes" style="background: var(--surface);">
+  <div class="section-label">05 — Recomendações</div>
+  <h2 class="section-title">O que dizem sobre mim</h2>
+
+  <div class="recs-grid">
+    <div class="rec-card fade-in">
+      <div class="rec-quote">"</div>
+      <div class="rec-text">
+        Ian demonstra uma capacidade impressionante de absorver novos conteúdos com rapidez. 
+        No torneio F1 in Schools, ele liderou a parte técnica e de marketing da equipe 
+        com maturidade acima da sua faixa etária.
+      </div>
+      <div class="rec-author">
+        <div class="rec-avatar">PT</div>
+        <div>
+          <div class="rec-name">Professor Técnico</div>
+          <div class="rec-role">Senai Sobradinho · Orientador</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-card fade-in">
+      <div class="rec-quote">"</div>
+      <div class="rec-text">
+        Como colega de equipe na FLL, vi de perto o quanto Ian é comprometido e 
+        criativo na resolução de problemas. Ele sempre trouxe soluções que ninguém 
+        tinha pensado antes.
+      </div>
+      <div class="rec-author">
+        <div class="rec-avatar">CM</div>
+        <div>
+          <div class="rec-name">Colega de Equipe</div>
+          <div class="rec-role">First Lego League · Membro</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-card fade-in">
+      <div class="rec-quote">"</div>
+      <div class="rec-text">
+        Trabalhei com Ian em um projeto freelance e fiquei impressionado com a 
+        qualidade do código e a atenção aos detalhes. Entregou além do que foi solicitado.
+      </div>
+      <div class="rec-author">
+        <div class="rec-avatar">CL</div>
+        <div>
+          <div class="rec-name">Cliente Freelance</div>
+          <div class="rec-role">Projeto Web · 2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-text">© 2026 Ian Lucas da Costa Mourão · portfolioHUB</div>
+  <div class="footer-links">
+    <a href="https://github.com/dogeil" target="_blank">GitHub</a>
+    <a href="https://linkedin.com/in/ian-mourao" target="_blank">LinkedIn</a>
+    <a href="mailto:ian.lucas.dev@gmail.com">E-mail</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
